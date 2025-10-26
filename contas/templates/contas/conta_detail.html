@@ -10,7 +10,7 @@
                 <h4><i class="bi bi-person-circle"></i> Dados do Cliente</h4>
             </div>
             <div class="card-body">
-                <p><strong>Código:</strong> {{ conta.cliente.codigo }}</p>
+                <p><strong>Codigo:</strong> {{ conta.cliente.codigo }}</p>
                 <p><strong>Nome:</strong> {{ conta.cliente.nome }}</p>
                 <p><strong>E-mail:</strong> {{ conta.cliente.email }}</p>
                 <p><strong>CPF:</strong> {{ conta.cliente.cpf }}</p>
@@ -56,7 +56,7 @@
                 <div class="row mt-3">
                     <div class="col-md-4 mb-2">
                         <a href="{% url 'efetuar_deposito' conta.numero %}" class="btn btn-success w-100">
-                            <i class="bi bi-plus-circle"></i> Depósito
+                            <i class="bi bi-plus-circle"></i> Deposito
                         </a>
                     </div>
                     <div class="col-md-4 mb-2">
@@ -75,7 +75,7 @@
 
         <div class="card">
             <div class="card-header bg-dark text-white">
-                <h5><i class="bi bi-clock-history"></i> Últimas Transações</h5>
+                <h5><i class="bi bi-clock-history"></i> Ultimas Transacoes</h5>
             </div>
             <div class="card-body">
                 {% if transacoes %}
@@ -100,7 +100,7 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                    <p class="text-muted">Nenhuma transação realizada ainda.</p>
+                    <p class="text-muted">Nenhuma transacao realizada ainda.</p>
                 {% endif %}
             </div>
         </div>
