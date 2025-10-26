@@ -1,6 +1,10 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from decimal import Decimal
+import uuid
+import qrcode
+from io import BytesIO
+import base64
 
 
 class Cliente(models.Model):
@@ -112,13 +116,98 @@ class Conta(models.Model):
 
         return True, 'Transferência efetuada com sucesso!'
 
+    def transferir_pix(self, chave_pix, valor):
+        """Realiza uma transferencia via PIX"""
+        valor = Decimal(str(valor))
+
+        if valor <= 0:
+            return False, 'Valor do PIX deve ser positivo!', None
+
+        if valor > self.saldo_total:
+            return False, 'PIX nao realizado. Saldo insuficiente!', None
+
+        # Buscar conta destino pela chave PIX
+        try:
+            chave_obj = ChavePix.objects.get(chave=chave_pix, ativa=True)
+            conta_destino = chave_obj.conta
+        except ChavePix.DoesNotExist:
+            return False, 'Chave PIX nao encontrada ou inativa!', None
+
+        if conta_destino.numero == self.numero:
+            return False, 'Nao e possivel enviar PIX para a mesma conta!', None
+
+        # Debita da conta origem
+        if self.saldo >= valor:
+            self.saldo -= valor
+        else:
+            restante = valor - self.saldo
+            self.saldo = Decimal('0.00')
+            self.limite -= restante
+
+        # Credita na conta destino
+        conta_destino.saldo += valor
+
+        self.save()
+        conta_destino.save()
+
+        return True, 'PIX efetuado com sucesso!', conta_destino
+
+    @property
+    def chave_pix_principal(self):
+        """Retorna a chave PIX principal (primeira ativa)"""
+        chave = self.chaves_pix.filter(ativa=True).first()
+        return chave.chave if chave else None
+
+
+class ChavePix(models.Model):
+    """Modelo para representar chaves PIX"""
+    TIPO_CHAVE_CHOICES = [
+        ('CPF', 'CPF'),
+        ('EMAIL', 'E-mail'),
+        ('TELEFONE', 'Telefone'),
+        ('ALEATORIA', 'Chave Aleatoria'),
+    ]
+
+    conta = models.ForeignKey(
+        Conta,
+        on_delete=models.CASCADE,
+        related_name='chaves_pix',
+        verbose_name='Conta'
+    )
+    tipo_chave = models.CharField(
+        max_length=10,
+        choices=TIPO_CHAVE_CHOICES,
+        verbose_name='Tipo de Chave'
+    )
+    chave = models.CharField(
+        max_length=200,
+        unique=True,
+        verbose_name='Chave PIX'
+    )
+    ativa = models.BooleanField(default=True, verbose_name='Ativa')
+    data_criacao = models.DateTimeField(auto_now_add=True, verbose_name='Data de Criacao')
+
+    class Meta:
+        verbose_name = 'Chave PIX'
+        verbose_name_plural = 'Chaves PIX'
+        ordering = ['-data_criacao']
+
+    def __str__(self):
+        return f'{self.get_tipo_chave_display()}: {self.chave}'
+
+    @staticmethod
+    def gerar_chave_aleatoria():
+        """Gera uma chave PIX aleatoria no formato UUID"""
+        return str(uuid.uuid4())
+
 
 class Transacao(models.Model):
     """Modelo para registrar histórico de transações"""
     TIPO_CHOICES = [
-        ('D', 'Depósito'),
+        ('D', 'Deposito'),
         ('S', 'Saque'),
-        ('T', 'Transferência'),
+        ('T', 'Transferencia'),
+        ('P', 'PIX'),
     ]
 
     conta = models.ForeignKey(
@@ -142,8 +231,14 @@ class Transacao(models.Model):
         related_name='transferencias_recebidas',
         verbose_name='Conta Destino'
     )
+    chave_pix = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        verbose_name='Chave PIX'
+    )
     data_hora = models.DateTimeField(auto_now_add=True, verbose_name='Data/Hora')
-    descricao = models.TextField(blank=True, verbose_name='Descrição')
+    descricao = models.TextField(blank=True, verbose_name='Descricao')
 
     class Meta:
         verbose_name = 'Transação'

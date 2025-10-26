@@ -1,2 +1,4 @@
 Django>=5.1.1
 python-dateutil>=2.8.2
+qrcode>=8.2
+Pillow>=10.4.0

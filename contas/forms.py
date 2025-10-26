@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from .models import Cliente, Conta
+from .models import Cliente, Conta, ChavePix
 
 
 class ClienteForm(forms.ModelForm):
@@ -77,5 +77,46 @@ class TransferenciaForm(forms.Form):
             'pattern': '[0-9]+([,\.][0-9]{1,2})?'
         }),
         label='Valor da Transferencia (R$)',
+        help_text='Use virgula ou ponto como separador decimal'
+    )
+
+
+class ChavePixForm(forms.ModelForm):
+    """Formulario para cadastro de chave PIX"""
+    class Meta:
+        model = ChavePix
+        fields = ['tipo_chave', 'chave']
+        widgets = {
+            'tipo_chave': forms.Select(attrs={'class': 'form-control'}),
+            'chave': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Digite sua chave PIX'
+            }),
+        }
+        labels = {
+            'tipo_chave': 'Tipo de Chave',
+            'chave': 'Chave PIX',
+        }
+
+
+class PixForm(forms.Form):
+    """Formulario para transferencia via PIX"""
+    chave_pix = forms.CharField(
+        max_length=200,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Digite a chave PIX do destinatario'
+        }),
+        label='Chave PIX',
+        help_text='CPF, E-mail, Telefone ou Chave Aleatoria'
+    )
+    valor = forms.CharField(
+        max_length=20,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ex: 100,50',
+            'pattern': '[0-9]+([,\.][0-9]{1,2})?'
+        }),
+        label='Valor do PIX (R$)',
         help_text='Use virgula ou ponto como separador decimal'
     )
