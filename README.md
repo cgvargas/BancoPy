@@ -361,9 +361,9 @@ Este e um projeto educacional desenvolvido para fins de aprendizado e demonstrac
 
 **Seu Nome**
 
-- GitHub: [@seu-usuario](https://github.com/seu-usuario)
-- LinkedIn: [seu-perfil](https://linkedin.com/in/seu-perfil)
-- Email: seu-email@exemplo.com
+- GitHub: [@cgvargas](https://github.com/cgvargas)
+- LinkedIn: [seu-perfil](https://www.linkedin.com/in/cgvargas19710331/)
+- Email: cgvargas.inf@gmail.com
 
 ---
 
@@ -379,9 +379,9 @@ Este e um projeto educacional desenvolvido para fins de aprendizado e demonstrac
 
 Encontrou um bug? Tem uma sugestao?
 
-- 🐛 [Reportar Bug](https://github.com/SEU_USUARIO/BancoPy/issues)
-- 💡 [Sugerir Funcionalidade](https://github.com/SEU_USUARIO/BancoPy/issues)
-- 📧 Email: seu-email@exemplo.com
+- 🐛 [Reportar Bug](https://github.com/cgvargas)
+- 💡 [Sugerir Funcionalidade](https://github.com/cgvargas/BancoPy?tab=readme-ov-file)
+- 📧 Email: cgvargas.inf@gmail.com
 
 ---
 
