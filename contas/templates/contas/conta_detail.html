@@ -1,0 +1,113 @@
+{% extends 'contas/base.html' %}
+
+{% block title %}Conta {{ conta.numero }} - BancoPy{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4><i class="bi bi-person-circle"></i> Dados do Cliente</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Código:</strong> {{ conta.cliente.codigo }}</p>
+                <p><strong>Nome:</strong> {{ conta.cliente.nome }}</p>
+                <p><strong>E-mail:</strong> {{ conta.cliente.email }}</p>
+                <p><strong>CPF:</strong> {{ conta.cliente.cpf }}</p>
+                <p><strong>Data de Nascimento:</strong> {{ conta.cliente.data_nascimento|date:"d/m/Y" }}</p>
+                <p><strong>Cadastro:</strong> {{ conta.cliente.data_cadastro|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card mb-3">
+            <div class="card-header bg-success text-white">
+                <h4><i class="bi bi-wallet2"></i> Conta {{ conta.numero }}</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">Saldo</h6>
+                                <h3 class="text-primary">R$ {{ conta.saldo|floatformat:2 }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">Limite</h6>
+                                <h3 class="text-warning">R$ {{ conta.limite|floatformat:2 }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted">Saldo Total</h6>
+                                <h3 class="text-success">R$ {{ conta.saldo_total|floatformat:2 }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-4 mb-2">
+                        <a href="{% url 'efetuar_deposito' conta.numero %}" class="btn btn-success w-100">
+                            <i class="bi bi-plus-circle"></i> Depósito
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <a href="{% url 'efetuar_saque' conta.numero %}" class="btn btn-warning w-100">
+                            <i class="bi bi-dash-circle"></i> Saque
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <a href="{% url 'efetuar_transferencia' conta.numero %}" class="btn btn-info w-100">
+                            <i class="bi bi-arrow-left-right"></i> Transferir
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5><i class="bi bi-clock-history"></i> Últimas Transações</h5>
+            </div>
+            <div class="card-body">
+                {% if transacoes %}
+                    <div class="list-group">
+                        {% for transacao in transacoes %}
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ transacao.get_tipo_display }}</strong>
+                                        {% if transacao.tipo == 'T' %}
+                                            - Conta {{ transacao.conta_destino.numero }}
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <span class="badge bg-{% if transacao.tipo == 'D' %}success{% elif transacao.tipo == 'S' %}warning{% else %}info{% endif %}">
+                                            R$ {{ transacao.valor|floatformat:2 }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <small class="text-muted">{{ transacao.data_hora|date:"d/m/Y H:i" }}</small>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">Nenhuma transação realizada ainda.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <a href="{% url 'conta_list' %}" class="btn btn-secondary mt-3">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+    </div>
+</div>
+{% endblock %}
