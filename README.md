@@ -102,8 +102,8 @@ python manage.py runserver
 ```
 
 7️⃣ **Acesse a aplicacao**
-- Interface: http://localhost:8000
-- Admin: http://localhost:8000/admin
+- Interface: http://localhost:8888
+- Admin: http://localhost:8888/admin
 
 ---
 
