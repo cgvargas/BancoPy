@@ -362,7 +362,7 @@ Este e um projeto educacional desenvolvido para fins de aprendizado e demonstrac
 **Seu Nome**
 
 - GitHub: [@cgvargas](https://github.com/cgvargas)
-- LinkedIn: [seu-perfil](https://www.linkedin.com/in/cgvargas19710331/)
+- LinkedIn: [@cgvargas19710331](https://www.linkedin.com/in/cgvargas19710331/)
 - Email: cgvargas.inf@gmail.com
 
 ---
