@@ -22,7 +22,7 @@ Uma aplicacao web moderna e completa para gerenciamento bancario, desenvolvida c
 <div align="center">
 
 ### Interface Principal
-![Dashboard](https://via.placeholder.com/800x400/667eea/ffffff?text=Dashboard+BancoPy)
+![Dashboard]("C:\Users\claud\OneDrive_CGVargas\OneDrive\Imagens\boncopy.jpeg")
 
 ### Operacoes Bancarias
 ![Transacoes](https://via.placeholder.com/800x400/764ba2/ffffff?text=Gerenciamento+de+Contas)
