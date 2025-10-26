@@ -2,9 +2,6 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from decimal import Decimal
 import uuid
-import qrcode
-from io import BytesIO
-import base64
 
 
 class Cliente(models.Model):

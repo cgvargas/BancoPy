@@ -54,19 +54,32 @@
                 </div>
 
                 <div class="row mt-3">
-                    <div class="col-md-4 mb-2">
+                    <div class="col-md-3 mb-2">
                         <a href="{% url 'efetuar_deposito' conta.numero %}" class="btn btn-success w-100">
                             <i class="bi bi-plus-circle"></i> Deposito
                         </a>
                     </div>
-                    <div class="col-md-4 mb-2">
+                    <div class="col-md-3 mb-2">
                         <a href="{% url 'efetuar_saque' conta.numero %}" class="btn btn-warning w-100">
                             <i class="bi bi-dash-circle"></i> Saque
                         </a>
                     </div>
-                    <div class="col-md-4 mb-2">
+                    <div class="col-md-3 mb-2">
                         <a href="{% url 'efetuar_transferencia' conta.numero %}" class="btn btn-info w-100">
                             <i class="bi bi-arrow-left-right"></i> Transferir
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'efetuar_pix' conta.numero %}" class="btn btn-primary w-100">
+                            <i class="bi bi-lightning-charge-fill"></i> PIX
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <a href="{% url 'listar_chaves_pix' conta.numero %}" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-key"></i> Gerenciar Chaves PIX
                         </a>
                     </div>
                 </div>

@@ -9,4 +9,9 @@ urlpatterns = [
     path('conta/<int:pk>/deposito/', views.efetuar_deposito, name='efetuar_deposito'),
     path('conta/<int:pk>/saque/', views.efetuar_saque, name='efetuar_saque'),
     path('conta/<int:pk>/transferencia/', views.efetuar_transferencia, name='efetuar_transferencia'),
+    # URLs PIX
+    path('conta/<int:pk>/pix/', views.efetuar_pix, name='efetuar_pix'),
+    path('conta/<int:pk>/pix/cadastrar/', views.cadastrar_chave_pix, name='cadastrar_chave_pix'),
+    path('conta/<int:pk>/pix/chaves/', views.listar_chaves_pix, name='listar_chaves_pix'),
+    path('conta/<int:pk>/pix/chave/<int:chave_id>/desativar/', views.desativar_chave_pix, name='desativar_chave_pix'),
 ]

@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
-from .models import Cliente, Conta, Transacao
-from .forms import ClienteForm, ContaForm, DepositoForm, SaqueForm, TransferenciaForm
+from .models import Cliente, Conta, Transacao, ChavePix
+from .forms import ClienteForm, ContaForm, DepositoForm, SaqueForm, TransferenciaForm, ChavePixForm, PixForm
 from decimal import Decimal
 
 
@@ -167,3 +167,85 @@ def efetuar_transferencia(request, pk):
         form = TransferenciaForm()
 
     return render(request, 'contas/transferencia.html', {'form': form, 'conta': conta_origem})
+
+
+def cadastrar_chave_pix(request, pk):
+    """View para cadastrar chave PIX"""
+    conta = get_object_or_404(Conta, pk=pk)
+
+    if request.method == 'POST':
+        form = ChavePixForm(request.POST)
+        if form.is_valid():
+            try:
+                chave_pix = form.save(commit=False)
+                chave_pix.conta = conta
+
+                # Se for chave aleatoria, gerar automaticamente
+                if chave_pix.tipo_chave == 'ALEATORIA':
+                    chave_pix.chave = ChavePix.gerar_chave_aleatoria()
+
+                chave_pix.save()
+                messages.success(request, f'Chave PIX cadastrada com sucesso: {chave_pix.chave}')
+                return redirect('listar_chaves_pix', pk=conta.numero)
+            except Exception as e:
+                messages.error(request, f'Erro ao cadastrar chave PIX: {str(e)}')
+    else:
+        form = ChavePixForm()
+
+    return render(request, 'contas/cadastrar_chave_pix.html', {'form': form, 'conta': conta})
+
+
+def listar_chaves_pix(request, pk):
+    """View para listar chaves PIX de uma conta"""
+    conta = get_object_or_404(Conta, pk=pk)
+    chaves = conta.chaves_pix.all()
+
+    return render(request, 'contas/listar_chaves_pix.html', {'conta': conta, 'chaves': chaves})
+
+
+def efetuar_pix(request, pk):
+    """View para efetuar transferencia via PIX"""
+    conta = get_object_or_404(Conta, pk=pk)
+
+    if request.method == 'POST':
+        form = PixForm(request.POST)
+        if form.is_valid():
+            chave_pix = form.cleaned_data['chave_pix']
+            valor_str = form.cleaned_data['valor']
+            # Substitui virgula por ponto
+            valor_str = valor_str.replace(',', '.')
+            valor = Decimal(valor_str)
+
+            sucesso, mensagem, conta_destino = conta.transferir_pix(chave_pix, valor)
+
+            if sucesso:
+                # Registra a transacao
+                Transacao.objects.create(
+                    conta=conta,
+                    tipo='P',
+                    valor=valor,
+                    conta_destino=conta_destino,
+                    chave_pix=chave_pix,
+                    descricao=f'PIX para {conta_destino.cliente.nome}'
+                )
+                messages.success(request, f'{mensagem} Destinatario: {conta_destino.cliente.nome}')
+            else:
+                messages.error(request, mensagem)
+
+            return redirect('conta_detail', pk=conta.numero)
+    else:
+        form = PixForm()
+
+    return render(request, 'contas/efetuar_pix.html', {'form': form, 'conta': conta})
+
+
+def desativar_chave_pix(request, pk, chave_id):
+    """View para desativar uma chave PIX"""
+    conta = get_object_or_404(Conta, pk=pk)
+    chave = get_object_or_404(ChavePix, pk=chave_id, conta=conta)
+
+    chave.ativa = False
+    chave.save()
+    messages.success(request, 'Chave PIX desativada com sucesso!')
+
+    return redirect('listar_chaves_pix', pk=conta.numero)

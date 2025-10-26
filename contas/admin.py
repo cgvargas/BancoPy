@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Cliente, Conta, Transacao
+from .models import Cliente, Conta, Transacao, ChavePix
 
 
 @admin.register(Cliente)
@@ -43,3 +43,23 @@ class TransacaoAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         # Não permite editar transações
         return False
+
+
+@admin.register(ChavePix)
+class ChavePixAdmin(admin.ModelAdmin):
+    """Administracao de chaves PIX"""
+    list_display = ['id', 'get_conta_numero', 'get_cliente_nome', 'tipo_chave', 'chave', 'ativa', 'data_criacao']
+    list_filter = ['tipo_chave', 'ativa', 'data_criacao']
+    search_fields = ['chave', 'conta__numero', 'conta__cliente__nome']
+    readonly_fields = ['data_criacao']
+    ordering = ['-data_criacao']
+
+    def get_conta_numero(self, obj):
+        return obj.conta.numero
+    get_conta_numero.short_description = 'Conta'
+    get_conta_numero.admin_order_field = 'conta__numero'
+
+    def get_cliente_nome(self, obj):
+        return obj.conta.cliente.nome
+    get_cliente_nome.short_description = 'Cliente'
+    get_cliente_nome.admin_order_field = 'conta__cliente__nome'

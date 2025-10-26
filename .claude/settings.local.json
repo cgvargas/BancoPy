@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(python manage.py:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdicionar funcionalidade PIX completa ao sistema (Parte 2)\n\nImplementacoes:\n- Criar views PIX (cadastrar_chave_pix, listar_chaves_pix, efetuar_pix, desativar_chave_pix)\n- Adicionar URLs PIX (4 novas rotas)\n- Criar templates PIX (cadastrar, listar, efetuar, com interface moderna)\n- Atualizar admin com ChavePixAdmin\n- Adicionar botoes PIX em conta_detail.html\n- JavaScript para ocultar campo chave se aleatoria\n\nFuncionalidades PIX Completas:\n- Cadastro de chaves PIX (CPF, Email, Telefone, Aleatoria/UUID)\n- Listagem de chaves cadastradas com status\n- Transferencias instantaneas via chave PIX\n- Desativacao de chaves PIX\n- Validacao de saldo e chave\n- Registro de transacoes PIX\n- Interface intuitiva com icones Bootstrap\n- Mensagens de sucesso com nome do destinatario\n- Gerenciamento completo no Django Admin\n\nInterface:\n- Botao PIX na tela da conta\n- Botao \"Gerenciar Chaves PIX\"\n- Templates responsivos e modernos\n- Icones de raio para PIX\n- Alertas informativos\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []

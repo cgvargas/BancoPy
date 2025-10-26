@@ -1,0 +1,77 @@
+{% extends 'contas/base.html' %}
+
+{% block title %}Minhas Chaves PIX - BancoPy{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h3><i class="bi bi-qr-code"></i> Minhas Chaves PIX</h3>
+                <a href="{% url 'cadastrar_chave_pix' conta.numero %}" class="btn btn-light btn-sm">
+                    <i class="bi bi-plus-circle"></i> Nova Chave
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>Conta:</strong> {{ conta.numero }} | <strong>Cliente:</strong> {{ conta.cliente.nome }}
+                </div>
+
+                {% if chaves %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Chave PIX</th>
+                                    <th>Status</th>
+                                    <th>Data Criacao</th>
+                                    <th>Acoes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for chave in chaves %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-info">{{ chave.get_tipo_chave_display }}</span>
+                                        </td>
+                                        <td><code>{{ chave.chave }}</code></td>
+                                        <td>
+                                            {% if chave.ativa %}
+                                                <span class="badge bg-success">Ativa</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Inativa</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ chave.data_criacao|date:"d/m/Y H:i" }}</td>
+                                        <td>
+                                            {% if chave.ativa %}
+                                                <a href="{% url 'desativar_chave_pix' conta.numero chave.id %}"
+                                                   class="btn btn-sm btn-warning"
+                                                   onclick="return confirm('Deseja realmente desativar esta chave PIX?')">
+                                                    <i class="bi bi-x-circle"></i> Desativar
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i> Voce ainda nao possui chaves PIX cadastradas.
+                        <a href="{% url 'cadastrar_chave_pix' conta.numero %}" class="alert-link">Cadastre agora!</a>
+                    </div>
+                {% endif %}
+
+                <div class="mt-3">
+                    <a href="{% url 'conta_detail' conta.numero %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Voltar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
