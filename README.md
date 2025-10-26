@@ -24,8 +24,7 @@ Uma aplicacao web moderna e completa para gerenciamento bancario, desenvolvida c
 ### Interface Principal
 ![Dashboard](.github/images/dashboard.jpeg)
 
-### Operacoes Bancarias
-![Transacoes](https://via.placeholder.com/800x400/764ba2/ffffff?text=Gerenciamento+de+Contas)
+### Sistema completo com PIX, Depositos, Saques e Transferencias
 
 </div>
 
